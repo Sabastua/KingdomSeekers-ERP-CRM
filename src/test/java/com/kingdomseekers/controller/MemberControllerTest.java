@@ -1,5 +1,7 @@
 package com.kingdomseekers.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kingdomseekers.config.SecurityConfig;
 import com.kingdomseekers.entity.Member;
 import com.kingdomseekers.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -23,7 +26,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(MemberController.class)
+@Import(SecurityConfig.class)
 public class MemberControllerTest {
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     private MockMvc mockMvc;
@@ -95,7 +102,7 @@ public class MemberControllerTest {
 
         mockMvc.perform(post("/api/members")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"firstName\":\"John\",\"lastName\":\"Doe\",\"email\":\"john.doe@example.com\",\"phoneNumber\":\"+1234567890\"}"))
+                .content(objectMapper.writeValueAsString(testMember)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.firstName").value("John"));
     }

@@ -10,6 +10,9 @@ jest.mock('../services/api', () => ({
   }
 }));
 
+// Mock setIsAuthenticated function
+const mockSetIsAuthenticated = jest.fn();
+
 describe('Login Component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -18,7 +21,7 @@ describe('Login Component', () => {
   test('renders login form', () => {
     render(
       <BrowserRouter>
-        <Login />
+        <Login setIsAuthenticated={mockSetIsAuthenticated} />
       </BrowserRouter>
     );
     
@@ -34,7 +37,7 @@ describe('Login Component', () => {
     
     render(
       <BrowserRouter>
-        <Login />
+        <Login setIsAuthenticated={mockSetIsAuthenticated} />
       </BrowserRouter>
     );
     
@@ -58,11 +61,13 @@ describe('Login Component', () => {
 
   test('displays error message on login failure', async () => {
     // Mock failed login
-    (authService.login as jest.Mock).mockRejectedValueOnce(new Error('Invalid credentials'));
+    (authService.login as jest.Mock).mockRejectedValueOnce({
+      response: { data: { message: 'Invalid credentials' } }
+    });
     
     render(
       <BrowserRouter>
-        <Login />
+        <Login setIsAuthenticated={mockSetIsAuthenticated} />
       </BrowserRouter>
     );
     
