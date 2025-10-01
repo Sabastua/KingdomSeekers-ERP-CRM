@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kingdomseekers-frontend
+  labels:
+    app: kingdomseekers
+    tier: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kingdomseekers
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: kingdomseekers
+        tier: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: ${DOCKER_HUB_USERNAME}/kingdomseekers-frontend:latest
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kingdomseekers-frontend
+  labels:
+    app: kingdomseekers
+    tier: frontend
+spec:
+  selector:
+    app: kingdomseekers
+    tier: frontend
+  ports:
+  - port: 80
+    targetPort: 80
+  type: LoadBalancer
