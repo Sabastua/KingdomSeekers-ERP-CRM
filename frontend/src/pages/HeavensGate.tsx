@@ -1,29 +1,17 @@
 import { useState, useEffect } from 'react';
-import { 
-  Box, Typography, Paper, Card, CardContent, 
+import {
+  Box, Typography, Paper, Card, CardContent,
   Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions,
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
   Chip, IconButton, MenuItem, FormControl, InputLabel, Select,
   Alert, Snackbar
 } from '@mui/material';
-import { 
+import {
   Add, Edit, Delete, Bed, Login
 } from '@mui/icons-material';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { roomService, bookingService } from '../services/api';
-
-// Mock data for now - will be replaced with API calls
-const mockRooms = [
-  { id: 1, roomNumber: 'HG-001', type: 'Standard', capacity: 2, price: 5000, status: 'available', package: 'Basic' },
-  { id: 2, roomNumber: 'HG-002', type: 'Deluxe', capacity: 4, price: 8000, status: 'occupied', package: 'Premium' },
-  { id: 3, roomNumber: 'HG-003', type: 'VIP', capacity: 6, price: 15000, status: 'maintenance', package: 'Luxury' },
-  { id: 4, roomNumber: 'HG-004', type: 'Family Suite', capacity: 8, price: 20000, status: 'available', package: 'Family' },
-];
-
-const mockBookings = [
-  { id: 1, guestName: 'John Doe', roomNumber: 'HG-002', checkIn: '2024-01-15', checkOut: '2024-01-18', amount: 24000, paymentMethod: 'M-Pesa', status: 'confirmed' },
-  { id: 2, guestName: 'Jane Smith', roomNumber: 'HG-004', checkIn: '2024-01-16', checkOut: '2024-01-20', amount: 80000, paymentMethod: 'Bank Transfer', status: 'pending' },
-];
+import type { Room, Booking } from '../types';
 
 const mockOccupancyData = [
   { date: '2024-01-01', occupancy: 65, revenue: 150000 },
@@ -42,9 +30,8 @@ const paymentMethodData = [
 ];
 
 const HeavensGate = () => {
-  const [rooms, setRooms] = useState([]);
-  const [bookings, setBookings] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [bookings, setBookings] = useState<Booking[]>([]);
   const [openBookingDialog, setOpenBookingDialog] = useState(false);
   const [openRoomDialog, setOpenRoomDialog] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
@@ -77,7 +64,6 @@ const HeavensGate = () => {
   }, []);
 
   const fetchData = async () => {
-    setLoading(true);
     try {
       const [roomsRes, bookingsRes] = await Promise.all([
         roomService.getAll(),
@@ -88,8 +74,6 @@ const HeavensGate = () => {
     } catch (error) {
       console.error('Error fetching data:', error);
       setSnackbar({ open: true, message: 'Error loading data', severity: 'error' });
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -167,53 +151,97 @@ const HeavensGate = () => {
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Bed color="primary" />
-          Heaven's Gate Prayer Mountain
-        </Typography>
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button 
-            variant="contained" 
-            startIcon={<Add />}
-            onClick={() => setOpenRoomDialog(true)}
-          >
-            Add Room
-          </Button>
-          <Button 
-            variant="contained" 
-            startIcon={<Login />}
-            onClick={() => setOpenBookingDialog(true)}
-          >
-            New Booking
-          </Button>
+      <Box sx={{ mb: 4 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <Box>
+            <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5, display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Bed sx={{ fontSize: 32, color: 'primary.main' }} />
+              Heaven's Gate Prayer Mountain
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Manage rooms, bookings, and accommodations
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            <Button
+              variant="outlined"
+              startIcon={<Add />}
+              onClick={() => setOpenRoomDialog(true)}
+              size="large"
+            >
+              Add Room
+            </Button>
+            <Button
+              variant="contained"
+              startIcon={<Login />}
+              onClick={() => setOpenBookingDialog(true)}
+              size="large"
+            >
+              New Booking
+            </Button>
+          </Box>
         </Box>
       </Box>
 
-      {/* Stats Cards */}
       <Box sx={{ display: 'flex', gap: 3, mb: 4, flexWrap: 'wrap' }}>
-        <Card sx={{ bgcolor: 'primary.light', color: 'white', minWidth: 200, flex: 1 }}>
+        <Card
+          sx={{
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            color: 'white',
+            minWidth: 200,
+            flex: 1,
+            transition: 'all 0.3s',
+            '&:hover': { transform: 'translateY(-4px)', boxShadow: '0 12px 24px rgba(0,0,0,0.15)' },
+          }}
+        >
           <CardContent>
-            <Typography variant="h6" gutterBottom>Total Rooms</Typography>
-            <Typography variant="h3">{totalRooms}</Typography>
+            <Typography variant="body2" sx={{ opacity: 0.9, mb: 1 }}>Total Rooms</Typography>
+            <Typography variant="h3" sx={{ fontWeight: 700 }}>{totalRooms}</Typography>
           </CardContent>
         </Card>
-        <Card sx={{ bgcolor: 'secondary.light', color: 'white', minWidth: 200, flex: 1 }}>
+        <Card
+          sx={{
+            background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+            color: 'white',
+            minWidth: 200,
+            flex: 1,
+            transition: 'all 0.3s',
+            '&:hover': { transform: 'translateY(-4px)', boxShadow: '0 12px 24px rgba(0,0,0,0.15)' },
+          }}
+        >
           <CardContent>
-            <Typography variant="h6" gutterBottom>Occupancy Rate</Typography>
-            <Typography variant="h3">{occupancyRate}%</Typography>
+            <Typography variant="body2" sx={{ opacity: 0.9, mb: 1 }}>Occupancy Rate</Typography>
+            <Typography variant="h3" sx={{ fontWeight: 700 }}>{occupancyRate}%</Typography>
           </CardContent>
         </Card>
-        <Card sx={{ bgcolor: 'success.light', color: 'white', minWidth: 200, flex: 1 }}>
+        <Card
+          sx={{
+            background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+            color: 'white',
+            minWidth: 200,
+            flex: 1,
+            transition: 'all 0.3s',
+            '&:hover': { transform: 'translateY(-4px)', boxShadow: '0 12px 24px rgba(0,0,0,0.15)' },
+          }}
+        >
           <CardContent>
-            <Typography variant="h6" gutterBottom>Available Rooms</Typography>
-            <Typography variant="h3">{totalRooms - occupiedRooms}</Typography>
+            <Typography variant="body2" sx={{ opacity: 0.9, mb: 1 }}>Available Rooms</Typography>
+            <Typography variant="h3" sx={{ fontWeight: 700 }}>{totalRooms - occupiedRooms}</Typography>
           </CardContent>
         </Card>
-        <Card sx={{ bgcolor: 'warning.light', color: 'white', minWidth: 200, flex: 1 }}>
+        <Card
+          sx={{
+            background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+            color: 'white',
+            minWidth: 200,
+            flex: 1,
+            transition: 'all 0.3s',
+            '&:hover': { transform: 'translateY(-4px)', boxShadow: '0 12px 24px rgba(0,0,0,0.15)' },
+          }}
+        >
           <CardContent>
-            <Typography variant="h6" gutterBottom>Today's Revenue</Typography>
-            <Typography variant="h3">KSh {totalRevenue.toLocaleString()}</Typography>
+            <Typography variant="body2" sx={{ opacity: 0.9, mb: 1 }}>Today's Revenue</Typography>
+            <Typography variant="h3" sx={{ fontWeight: 700 }}>KSh {totalRevenue.toLocaleString()}</Typography>
           </CardContent>
         </Card>
       </Box>
@@ -259,22 +287,21 @@ const HeavensGate = () => {
         </Paper>
       </Box>
 
-      {/* Rooms Table */}
-      <Paper sx={{ mb: 3 }}>
-        <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-          <Typography variant="h6">Room Management</Typography>
+      <Paper sx={{ mb: 3, border: '1px solid', borderColor: 'divider' }}>
+        <Box sx={{ p: 3, borderBottom: 1, borderColor: 'divider', bgcolor: 'grey.50' }}>
+          <Typography variant="h6" sx={{ fontWeight: 600 }}>Room Management</Typography>
         </Box>
         <TableContainer>
           <Table>
             <TableHead>
-              <TableRow>
-                <TableCell>Room Number</TableCell>
-                <TableCell>Type</TableCell>
-                <TableCell>Capacity</TableCell>
-                <TableCell>Package</TableCell>
-                <TableCell>Price (KSh)</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Actions</TableCell>
+              <TableRow sx={{ bgcolor: 'background.paper' }}>
+                <TableCell sx={{ fontWeight: 600 }}>Room Number</TableCell>
+                <TableCell sx={{ fontWeight: 600 }}>Type</TableCell>
+                <TableCell sx={{ fontWeight: 600 }}>Capacity</TableCell>
+                <TableCell sx={{ fontWeight: 600 }}>Package</TableCell>
+                <TableCell sx={{ fontWeight: 600 }}>Price (KSh)</TableCell>
+                <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
+                <TableCell sx={{ fontWeight: 600 }}>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -307,22 +334,21 @@ const HeavensGate = () => {
         </TableContainer>
       </Paper>
 
-      {/* Recent Bookings */}
-      <Paper>
-        <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-          <Typography variant="h6">Recent Bookings</Typography>
+      <Paper sx={{ border: '1px solid', borderColor: 'divider' }}>
+        <Box sx={{ p: 3, borderBottom: 1, borderColor: 'divider', bgcolor: 'grey.50' }}>
+          <Typography variant="h6" sx={{ fontWeight: 600 }}>Recent Bookings</Typography>
         </Box>
         <TableContainer>
           <Table>
             <TableHead>
-              <TableRow>
-                <TableCell>Guest Name</TableCell>
-                <TableCell>Room</TableCell>
-                <TableCell>Check-in</TableCell>
-                <TableCell>Check-out</TableCell>
-                <TableCell>Amount</TableCell>
-                <TableCell>Payment</TableCell>
-                <TableCell>Status</TableCell>
+              <TableRow sx={{ bgcolor: 'background.paper' }}>
+                <TableCell sx={{ fontWeight: 600 }}>Guest Name</TableCell>
+                <TableCell sx={{ fontWeight: 600 }}>Room</TableCell>
+                <TableCell sx={{ fontWeight: 600 }}>Check-in</TableCell>
+                <TableCell sx={{ fontWeight: 600 }}>Check-out</TableCell>
+                <TableCell sx={{ fontWeight: 600 }}>Amount</TableCell>
+                <TableCell sx={{ fontWeight: 600 }}>Payment</TableCell>
+                <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

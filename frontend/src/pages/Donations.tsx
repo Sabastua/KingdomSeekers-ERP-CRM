@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { 
-  Box, Typography, Button, Paper, Table, TableBody, TableCell, 
-  TableContainer, TableHead, TableRow, Dialog, DialogTitle, 
-  DialogContent, DialogActions, TextField, MenuItem, IconButton
+import {
+  Box, Typography, Button, Paper, Table, TableBody, TableCell,
+  TableContainer, TableHead, TableRow, Dialog, DialogTitle,
+  DialogContent, DialogActions, TextField, MenuItem
 } from '@mui/material';
-import { Add, Edit } from '@mui/icons-material';
+import { Add } from '@mui/icons-material';
 import { donationService, memberService } from '../services/api';
 
 interface Donation {
@@ -99,36 +99,61 @@ const Donations = () => {
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-        <Typography variant="h4">Donations</Typography>
-        <Button 
-          variant="contained" 
-          startIcon={<Add />}
-          onClick={handleOpen}
-        >
-          Add Donation
-        </Button>
+      <Box sx={{ mb: 4 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <Box>
+            <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5 }}>
+              Donations Management
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Track and manage all church donations and offerings
+            </Typography>
+          </Box>
+          <Button
+            variant="contained"
+            startIcon={<Add />}
+            onClick={handleOpen}
+            size="large"
+          >
+            Add Donation
+          </Button>
+        </Box>
       </Box>
 
-      <TableContainer component={Paper}>
+      <TableContainer
+        component={Paper}
+        sx={{
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          border: '1px solid',
+          borderColor: 'divider',
+        }}
+      >
         <Table>
           <TableHead>
-            <TableRow>
-              <TableCell>Member</TableCell>
-              <TableCell>Amount</TableCell>
-              <TableCell>Type</TableCell>
-              <TableCell>Campaign</TableCell>
-              <TableCell>Date</TableCell>
+            <TableRow sx={{ bgcolor: 'grey.50' }}>
+              <TableCell sx={{ fontWeight: 600, color: 'text.primary' }}>Member</TableCell>
+              <TableCell sx={{ fontWeight: 600, color: 'text.primary' }}>Amount</TableCell>
+              <TableCell sx={{ fontWeight: 600, color: 'text.primary' }}>Type</TableCell>
+              <TableCell sx={{ fontWeight: 600, color: 'text.primary' }}>Campaign</TableCell>
+              <TableCell sx={{ fontWeight: 600, color: 'text.primary' }}>Date</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {donations.map((donation) => (
-              <TableRow key={donation.id}>
-                <TableCell>{getMemberName(donation.memberId)}</TableCell>
-                <TableCell>${donation.amount.toFixed(2)}</TableCell>
-                <TableCell>{donation.donationType}</TableCell>
-                <TableCell>{donation.campaignCode || 'N/A'}</TableCell>
-                <TableCell>{new Date(donation.donationDate).toLocaleDateString()}</TableCell>
+              <TableRow
+                key={donation.id}
+                sx={{
+                  '&:hover': {
+                    bgcolor: 'action.hover',
+                  },
+                  transition: 'background-color 0.2s',
+                }}
+              >
+                <TableCell sx={{ fontWeight: 500 }}>{getMemberName(donation.memberId)}</TableCell>
+                <TableCell sx={{ fontWeight: 600, color: 'success.main' }}>${donation.amount.toFixed(2)}</TableCell>
+                <TableCell sx={{ color: 'text.secondary' }}>{donation.donationType}</TableCell>
+                <TableCell sx={{ color: 'text.secondary' }}>{donation.campaignCode || 'N/A'}</TableCell>
+                <TableCell sx={{ color: 'text.secondary' }}>{new Date(donation.donationDate).toLocaleDateString()}</TableCell>
               </TableRow>
             ))}
           </TableBody>

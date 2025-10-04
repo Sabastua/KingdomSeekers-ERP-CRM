@@ -92,39 +92,73 @@ const Pastors = () => {
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-        <Typography variant="h4">Pastors</Typography>
-        <Button 
-          variant="contained" 
-          startIcon={<Add />}
-          onClick={() => handleOpen()}
-        >
-          Add Pastor
-        </Button>
+      <Box sx={{ mb: 4 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <Box>
+            <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5 }}>
+              Pastors Management
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Manage pastors and church branch information
+            </Typography>
+          </Box>
+          <Button
+            variant="contained"
+            startIcon={<Add />}
+            onClick={() => handleOpen()}
+            size="large"
+          >
+            Add Pastor
+          </Button>
+        </Box>
       </Box>
 
-      <TableContainer component={Paper}>
+      <TableContainer
+        component={Paper}
+        sx={{
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          border: '1px solid',
+          borderColor: 'divider',
+        }}
+      >
         <Table>
           <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Phone</TableCell>
-              <TableCell>Church Branch</TableCell>
-              <TableCell>Country</TableCell>
-              <TableCell>Actions</TableCell>
+            <TableRow sx={{ bgcolor: 'grey.50' }}>
+              <TableCell sx={{ fontWeight: 600, color: 'text.primary' }}>Name</TableCell>
+              <TableCell sx={{ fontWeight: 600, color: 'text.primary' }}>Email</TableCell>
+              <TableCell sx={{ fontWeight: 600, color: 'text.primary' }}>Phone</TableCell>
+              <TableCell sx={{ fontWeight: 600, color: 'text.primary' }}>Church Branch</TableCell>
+              <TableCell sx={{ fontWeight: 600, color: 'text.primary' }}>Country</TableCell>
+              <TableCell sx={{ fontWeight: 600, color: 'text.primary' }}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {pastors.map((pastor) => (
-              <TableRow key={pastor.id}>
-                <TableCell>{`${pastor.firstName} ${pastor.lastName}`}</TableCell>
-                <TableCell>{pastor.email}</TableCell>
-                <TableCell>{pastor.phone}</TableCell>
-                <TableCell>{pastor.churchBranch}</TableCell>
-                <TableCell>{pastor.countryCode}</TableCell>
+              <TableRow
+                key={pastor.id}
+                sx={{
+                  '&:hover': {
+                    bgcolor: 'action.hover',
+                  },
+                  transition: 'background-color 0.2s',
+                }}
+              >
+                <TableCell sx={{ fontWeight: 500 }}>{`${pastor.firstName} ${pastor.lastName}`}</TableCell>
+                <TableCell sx={{ color: 'text.secondary' }}>{pastor.email}</TableCell>
+                <TableCell sx={{ color: 'text.secondary' }}>{pastor.phone}</TableCell>
+                <TableCell sx={{ color: 'text.secondary' }}>{pastor.churchBranch}</TableCell>
+                <TableCell sx={{ color: 'text.secondary' }}>{pastor.countryCode}</TableCell>
                 <TableCell>
-                  <IconButton size="small" onClick={() => handleOpen(pastor)}>
+                  <IconButton
+                    size="small"
+                    onClick={() => handleOpen(pastor)}
+                    sx={{
+                      color: 'primary.main',
+                      '&:hover': {
+                        bgcolor: 'primary.lighter',
+                      },
+                    }}
+                  >
                     <Edit fontSize="small" />
                   </IconButton>
                 </TableCell>

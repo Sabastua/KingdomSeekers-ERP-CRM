@@ -27,3 +27,26 @@ export interface Donation {
   donationDate: string;
   memberId: number;
 }
+
+export interface Room {
+  id: number;
+  roomNumber: string;
+  type: string;
+  capacity: number;
+  price: number;
+  status: string;
+  packageType: string;
+}
+
+export interface Booking {
+  id: number;
+  guestName: string;
+  email: string;
+  phone: string;
+  room: Room;
+  checkInDate: string;
+  checkOutDate: string;
+  totalAmount: number;
+  paymentMethod: string;
+  status: string;
+}

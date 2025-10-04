@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { 
-  Box, Typography, Button, Paper, Table, TableBody, TableCell, 
-  TableContainer, TableHead, TableRow, Dialog, DialogTitle, 
+import {
+  Box, Typography, Button, Paper, Table, TableBody, TableCell,
+  TableContainer, TableHead, TableRow, Dialog, DialogTitle,
   DialogContent, DialogActions, TextField, MenuItem, IconButton,
   Chip
 } from '@mui/material';
-import { Add, Edit, Delete } from '@mui/icons-material';
+import { Add, Edit } from '@mui/icons-material';
 import { memberService, pastorService } from '../services/api';
 
 interface Member {
@@ -118,6 +118,7 @@ const Members = () => {
       console.error('Error updating vetting status:', error);
     }
   };
+  void handleVettingChange;
 
   const handleAssignPastor = async (memberId: number, pastorId: number) => {
     try {
@@ -127,6 +128,7 @@ const Members = () => {
       console.error('Error assigning pastor:', error);
     }
   };
+  void handleAssignPastor;
 
   const getVettingStatusColor = (status: string) => {
     switch (status) {
@@ -139,50 +141,85 @@ const Members = () => {
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-        <Typography variant="h4">Members</Typography>
-        <Button 
-          variant="contained" 
-          startIcon={<Add />}
-          onClick={() => handleOpen()}
-        >
-          Add Member
-        </Button>
+      <Box sx={{ mb: 4 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <Box>
+            <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5 }}>
+              Members Management
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Manage church members and their vetting status
+            </Typography>
+          </Box>
+          <Button
+            variant="contained"
+            startIcon={<Add />}
+            onClick={() => handleOpen()}
+            size="large"
+          >
+            Add Member
+          </Button>
+        </Box>
       </Box>
 
-      <TableContainer component={Paper}>
+      <TableContainer
+        component={Paper}
+        sx={{
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          border: '1px solid',
+          borderColor: 'divider',
+        }}
+      >
         <Table>
           <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Phone</TableCell>
-              <TableCell>Vetting Status</TableCell>
-              <TableCell>Assigned Pastor</TableCell>
-              <TableCell>Actions</TableCell>
+            <TableRow sx={{ bgcolor: 'grey.50' }}>
+              <TableCell sx={{ fontWeight: 600, color: 'text.primary' }}>Name</TableCell>
+              <TableCell sx={{ fontWeight: 600, color: 'text.primary' }}>Email</TableCell>
+              <TableCell sx={{ fontWeight: 600, color: 'text.primary' }}>Phone</TableCell>
+              <TableCell sx={{ fontWeight: 600, color: 'text.primary' }}>Vetting Status</TableCell>
+              <TableCell sx={{ fontWeight: 600, color: 'text.primary' }}>Assigned Pastor</TableCell>
+              <TableCell sx={{ fontWeight: 600, color: 'text.primary' }}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {members.map((member) => (
-              <TableRow key={member.id}>
-                <TableCell>{`${member.firstName} ${member.lastName}`}</TableCell>
-                <TableCell>{member.email}</TableCell>
-                <TableCell>{member.phone}</TableCell>
+              <TableRow
+                key={member.id}
+                sx={{
+                  '&:hover': {
+                    bgcolor: 'action.hover',
+                  },
+                  transition: 'background-color 0.2s',
+                }}
+              >
+                <TableCell sx={{ fontWeight: 500 }}>{`${member.firstName} ${member.lastName}`}</TableCell>
+                <TableCell sx={{ color: 'text.secondary' }}>{member.email}</TableCell>
+                <TableCell sx={{ color: 'text.secondary' }}>{member.phone}</TableCell>
                 <TableCell>
-                  <Chip 
-                    label={member.vettingStatus} 
+                  <Chip
+                    label={member.vettingStatus}
                     color={getVettingStatusColor(member.vettingStatus) as any}
                     size="small"
+                    sx={{ fontWeight: 500 }}
                   />
                 </TableCell>
-                <TableCell>
-                  {member.pastorId ? 
-                    pastors.find(p => p.id === member.pastorId)?.firstName + ' ' + 
-                    pastors.find(p => p.id === member.pastorId)?.lastName : 
+                <TableCell sx={{ color: 'text.secondary' }}>
+                  {member.pastorId ?
+                    pastors.find(p => p.id === member.pastorId)?.firstName + ' ' +
+                    pastors.find(p => p.id === member.pastorId)?.lastName :
                     'Not Assigned'}
                 </TableCell>
                 <TableCell>
-                  <IconButton size="small" onClick={() => handleOpen(member)}>
+                  <IconButton
+                    size="small"
+                    onClick={() => handleOpen(member)}
+                    sx={{
+                      color: 'primary.main',
+                      '&:hover': {
+                        bgcolor: 'primary.lighter',
+                      },
+                    }}
+                  >
                     <Edit fontSize="small" />
                   </IconButton>
                 </TableCell>
