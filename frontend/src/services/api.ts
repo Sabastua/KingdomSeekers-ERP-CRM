@@ -74,4 +74,39 @@ export const donationService = {
     api.get(`/donations/date-range?startDate=${startDate}&endDate=${endDate}`)
 };
 
+// Room services
+export const roomService = {
+  getAll: () => api.get('/rooms'),
+  getById: (id: number) => api.get(`/rooms/${id}`),
+  getByNumber: (roomNumber: string) => api.get(`/rooms/number/${roomNumber}`),
+  create: (room: any) => api.post('/rooms', room),
+  update: (id: number, room: any) => api.put(`/rooms/${id}`, room),
+  delete: (id: number) => api.delete(`/rooms/${id}`),
+  getByStatus: (status: string) => api.get(`/rooms/status/${status}`),
+  getByType: (type: string) => api.get(`/rooms/type/${type}`),
+  getAvailable: () => api.get('/rooms/available'),
+  getAvailableByType: (type: string) => api.get(`/rooms/available/type/${type}`),
+  getStats: () => api.get('/rooms/stats')
+};
+
+// Booking services
+export const bookingService = {
+  getAll: () => api.get('/bookings'),
+  getById: (id: number) => api.get(`/bookings/${id}`),
+  getByReference: (reference: string) => api.get(`/bookings/reference/${reference}`),
+  create: (booking: any) => api.post('/bookings', booking),
+  update: (id: number, booking: any) => api.put(`/bookings/${id}`, booking),
+  updateStatus: (id: number, status: string) => api.patch(`/bookings/${id}/status?status=${status}`),
+  delete: (id: number) => api.delete(`/bookings/${id}`),
+  getByStatus: (status: string) => api.get(`/bookings/status/${status}`),
+  getByRoom: (roomId: number) => api.get(`/bookings/room/${roomId}`),
+  getByGuestEmail: (email: string) => api.get(`/bookings/guest/${email}`),
+  getActiveOnDate: (date: string) => api.get(`/bookings/active?date=${date}`),
+  getCheckInsForDate: (date: string) => api.get(`/bookings/check-ins?date=${date}`),
+  getCheckOutsForDate: (date: string) => api.get(`/bookings/check-outs?date=${date}`),
+  getStats: () => api.get('/bookings/stats'),
+  getRevenueForPeriod: (startDate: string, endDate: string) => 
+    api.get(`/bookings/revenue?startDate=${startDate}&endDate=${endDate}`)
+};
+
 export default api;

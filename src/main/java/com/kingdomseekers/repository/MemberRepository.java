@@ -11,6 +11,5 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByEmail(String email);
     List<Member> findByVettingStatus(Member.VettingStatus status);
-    List<Member> findByAssignedPastorId(Long pastorId);
     List<Member> findByCountryOfResidence(String countryCode);
 }

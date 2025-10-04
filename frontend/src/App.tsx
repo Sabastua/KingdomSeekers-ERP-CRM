@@ -10,6 +10,7 @@ import Dashboard from './pages/Dashboard';
 import Members from './pages/Members';
 import Pastors from './pages/Pastors';
 import Donations from './pages/Donations';
+import HeavensGate from './pages/HeavensGate';
 import Layout from './components/Layout';
 
 const theme = createTheme({
@@ -48,6 +49,7 @@ function App() {
             <Route path="members" element={<Members />} />
             <Route path="pastors" element={<Pastors />} />
             <Route path="donations" element={<Donations />} />
+            <Route path="heavens-gate" element={<HeavensGate />} />
           </Route>
           
           <Route path="*" element={<Navigate to="/" />} />

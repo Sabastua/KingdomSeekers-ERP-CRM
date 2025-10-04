@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import { Box, AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemIcon, ListItemText, IconButton, Divider } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { Dashboard as DashboardIcon, People, Person, MonetizationOn, Logout } from '@mui/icons-material';
+import { Dashboard as DashboardIcon, People, Person, MonetizationOn, Logout, Bed } from '@mui/icons-material';
 import { authService } from '../services/api';
 
 const drawerWidth = 240;
@@ -19,6 +19,7 @@ const Layout = () => {
     { text: 'Members', icon: <People />, path: '/members' },
     { text: 'Pastors', icon: <Person />, path: '/pastors' },
     { text: 'Donations', icon: <MonetizationOn />, path: '/donations' },
+    { text: "Heaven's Gate", icon: <Bed />, path: '/heavens-gate' },
   ];
 
   return (
